@@ -1,0 +1,372 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{A1B2C3D4-E5F6-7890-ABCD-EF1234567890}</ProjectGuid>
+    <RootNamespace>semtex</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>DynamicLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v143</PlatformToolset>
+    <CharacterSet>MultiByte</CharacterSet>
+  </PropertyGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+
+  <PropertyGroup>
+    <OutDir>$(SolutionDir)bin\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)obj\$(ProjectName)\$(Configuration)\</IntDir>
+    <TargetName>semtex</TargetName>
+  </PropertyGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_X86_;NDEBUG;_WINDOWS;_USRDLL;GLEW_STATIC;FT2_BUILD_LIBRARY;NOMINMAX;OSHGUI_DONTUSEEXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+        $(ProjectDir);
+        $(SolutionDir)oshgui;
+        $(SolutionDir)oshgui\Dependencies\Include;
+        $(SolutionDir)oshgui\Dependencies\Include\freetype;
+        $(SolutionDir)oshgui\Dependencies\Source\FreeType\include;
+        $(SolutionDir)oshgui\Dependencies\Source\GLEW\include;
+        $(SolutionDir)oshgui\Dependencies\Source\SimpleImageLoader;
+        $(SolutionDir)detours;
+        $(SolutionDir)shared;
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>false</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExceptionHandling>Sync</ExceptionHandling>
+      <AdditionalOptions>/FS %(AdditionalOptions)</AdditionalOptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PreprocessorDefinitions>WIN32;_X86_;_DEBUG;_WINDOWS;_USRDLL;GLEW_STATIC;FT2_BUILD_LIBRARY;NOMINMAX;OSHGUI_DONTUSEEXCEPTIONS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <AdditionalIncludeDirectories>
+        $(ProjectDir);
+        $(SolutionDir)oshgui;
+        $(SolutionDir)oshgui\Dependencies\Include;
+        $(SolutionDir)oshgui\Dependencies\Include\freetype;
+        $(SolutionDir)oshgui\Dependencies\Source\FreeType\include;
+        $(SolutionDir)oshgui\Dependencies\Source\GLEW\include;
+        $(SolutionDir)oshgui\Dependencies\Source\SimpleImageLoader;
+        $(SolutionDir)detours;
+        $(SolutionDir)shared;
+        %(AdditionalIncludeDirectories)
+      </AdditionalIncludeDirectories>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>false</SDLCheck>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpp17</LanguageStandard>
+      <ExceptionHandling>Sync</ExceptionHandling>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <AdditionalDependencies>opengl32.lib;glu32.lib;Psapi.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+
+  <!-- Cheat DLL source files -->
+  <ItemGroup>
+    <ClCompile Include="semtex\dllmain.cpp" />
+    <ClCompile Include="semtex\hooks\hooks.cpp" />
+    <ClCompile Include="semtex\renderer\renderer.cpp" />
+    <ClCompile Include="semtex\input\input.cpp">
+      <ObjectFileName>$(IntDir)semtex_input.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="semtex\config\config.cpp" />
+    <ClCompile Include="semtex\menu\menu.cpp" />
+    <ClCompile Include="semtex\menu\menu_controls.cpp" />
+    <ClCompile Include="semtex\menu\keybind.cpp" />
+    <ClCompile Include="semtex\util\pattern.cpp" />
+    <ClCompile Include="semtex\game\memory.cpp" />
+    <ClCompile Include="semtex\game\trace.cpp" />
+    <ClCompile Include="semtex\game\weapons.cpp" />
+    <ClCompile Include="semtex\game\cl_runtime.cpp" />
+    <ClCompile Include="semtex\game\entities.cpp" />
+    <ClCompile Include="semtex\game\world.cpp" />
+    <ClCompile Include="semtex\features\visuals.cpp" />
+    <ClCompile Include="semtex\features\movement.cpp" />
+    <ClCompile Include="semtex\features\norecoil.cpp" />
+    <ClCompile Include="semtex\features\thirdperson.cpp" />
+    <ClCompile Include="semtex\features\aimbot.cpp" />
+    <ClCompile Include="semtex\features\antiaim.cpp" />
+    <ClCompile Include="semtex\features\ragebot.cpp" />
+    <ClCompile Include="semtex\features\movefix.cpp" />
+  </ItemGroup>
+
+  <!-- Detours -->
+  <ItemGroup>
+    <ClCompile Include="detours\detours.cpp" />
+    <ClCompile Include="detours\creatwth.cpp" />
+    <ClCompile Include="detours\disasm.cpp" />
+    <ClCompile Include="detours\disolx86.cpp" />
+    <ClCompile Include="detours\disolx64.cpp" />
+    <ClCompile Include="detours\image.cpp" />
+    <ClCompile Include="detours\modules.cpp" />
+  </ItemGroup>
+
+  <!-- GLEW (compiled as static, GLEW_STATIC) -->
+  <ItemGroup>
+    <ClCompile Include="oshgui\Dependencies\Source\GLEW\src\glew.c">
+      <LanguageStandard></LanguageStandard>
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemGroup>
+
+  <!-- OSHGui core -->
+  <ItemGroup>
+    <ClCompile Include="oshgui\Application.cpp" />
+    <ClCompile Include="oshgui\FormManager.cpp" />
+    <ClCompile Include="oshgui\Controls\Button.cpp" />
+    <ClCompile Include="oshgui\Controls\CheckBox.cpp" />
+    <ClCompile Include="oshgui\Controls\ColorBar.cpp" />
+    <ClCompile Include="oshgui\Controls\ColorButton.cpp" />
+    <ClCompile Include="oshgui\Controls\ColorPicker.cpp" />
+    <ClCompile Include="oshgui\Controls\ComboBox.cpp" />
+    <ClCompile Include="oshgui\Controls\ComboList.cpp" />
+    <ClCompile Include="oshgui\Controls\Control.cpp" />
+    <ClCompile Include="oshgui\Controls\Form.cpp" />
+    <ClCompile Include="oshgui\Controls\GroupBox.cpp" />
+    <ClCompile Include="oshgui\Controls\HotkeyControl.cpp" />
+    <ClCompile Include="oshgui\Controls\Label.cpp" />
+    <ClCompile Include="oshgui\Controls\LinkLabel.cpp" />
+    <ClCompile Include="oshgui\Controls\ListBox.cpp" />
+    <ClCompile Include="oshgui\Controls\MessageBox.cpp" />
+    <ClCompile Include="oshgui\Controls\MultiComboBox.cpp" />
+    <ClCompile Include="oshgui\Controls\Panel.cpp" />
+    <ClCompile Include="oshgui\Controls\PictureBox.cpp" />
+    <ClCompile Include="oshgui\Controls\ProgressBar.cpp" />
+    <ClCompile Include="oshgui\Controls\RadioButton.cpp" />
+    <ClCompile Include="oshgui\Controls\ScrollBar.cpp" />
+    <ClCompile Include="oshgui\Controls\TabControl.cpp" />
+    <ClCompile Include="oshgui\Controls\TabPage.cpp" />
+    <ClCompile Include="oshgui\Controls\TextBox.cpp" />
+    <ClCompile Include="oshgui\Controls\Timer.cpp" />
+    <ClCompile Include="oshgui\Controls\TrackBar.cpp" />
+    <ClCompile Include="oshgui\Cursor\Circle.cpp" />
+    <ClCompile Include="oshgui\Cursor\Cursor.cpp" />
+    <ClCompile Include="oshgui\Cursor\Cursors.cpp" />
+    <ClCompile Include="oshgui\Cursor\Hand.cpp" />
+    <ClCompile Include="oshgui\Cursor\IBeam.cpp" />
+    <ClCompile Include="oshgui\Cursor\Pen.cpp" />
+    <ClCompile Include="oshgui\Cursor\Pipette.cpp" />
+    <ClCompile Include="oshgui\Cursor\Wait.cpp" />
+    <ClCompile Include="oshgui\Drawing\Color.cpp" />
+    <ClCompile Include="oshgui\Drawing\ColorRectangle.cpp" />
+    <ClCompile Include="oshgui\Drawing\CustomizableImage.cpp" />
+    <ClCompile Include="oshgui\Drawing\Font.cpp" />
+    <ClCompile Include="oshgui\Drawing\FontManager.cpp" />
+    <ClCompile Include="oshgui\Drawing\FreeTypeFont.cpp" />
+    <ClCompile Include="oshgui\Drawing\GeometryBuffer.cpp" />
+    <ClCompile Include="oshgui\Drawing\Graphics.cpp" />
+    <ClCompile Include="oshgui\Drawing\Image.cpp" />
+    <ClCompile Include="oshgui\Drawing\ImageGraphics.cpp" />
+    <ClCompile Include="oshgui\Drawing\ImageLoader.cpp">
+      <ObjectFileName>$(IntDir)oshgui_ImageLoader.obj</ObjectFileName>
+    </ClCompile>
+    <ClCompile Include="oshgui\Drawing\RenderQueue.cpp" />
+    <ClCompile Include="oshgui\Drawing\RenderSurface.cpp" />
+    <ClCompile Include="oshgui\Drawing\RenderTarget.cpp" />
+    <ClCompile Include="oshgui\Drawing\Style.cpp" />
+    <ClCompile Include="oshgui\Drawing\Vector.cpp" />
+    <ClCompile Include="oshgui\Drawing\OpenGL\OpenGLGeometryBuffer.cpp" />
+    <ClCompile Include="oshgui\Drawing\OpenGL\OpenGLRenderer.cpp" />
+    <ClCompile Include="oshgui\Drawing\OpenGL\OpenGLTexture.cpp" />
+    <ClCompile Include="oshgui\Drawing\OpenGL\OpenGLTextureTarget.cpp" />
+    <ClCompile Include="oshgui\Drawing\OpenGL\OpenGLViewportTarget.cpp" />
+    <ClCompile Include="oshgui\Input\Input.cpp">
+      <AdditionalIncludeDirectories>$(SolutionDir)oshgui;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+    </ClCompile>
+    <ClCompile Include="oshgui\Input\WindowsMessage.cpp" />
+    <ClCompile Include="oshgui\Input\WindowsMessageThreaded.cpp" />
+    <ClCompile Include="oshgui\Misc\DateTime.cpp" />
+    <ClCompile Include="oshgui\Misc\Exceptions.cpp" />
+    <ClCompile Include="oshgui\Misc\RawDataContainer.cpp" />
+    <ClCompile Include="oshgui\Misc\Strings.cpp" />
+    <ClCompile Include="oshgui\Misc\TextHelper.cpp" />
+    <ClCompile Include="oshgui\Misc\TimeSpan.cpp" />
+  </ItemGroup>
+
+  <!-- SimpleImageLoader -->
+  <ItemGroup>
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\ImageData.cpp" />
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\ImageLoader.cpp" />
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\Convert.cpp" />
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\Flip.cpp" />
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\Stream.cpp" />
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\PluginBMP.cpp" />
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\PluginJPEG.cpp" />
+    <ClCompile Include="oshgui\Dependencies\Source\SimpleImageLoader\PluginPNG.cpp" />
+  </ItemGroup>
+
+  <!-- FreeType -->
+  <ItemGroup>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\autofit\autofit.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftbase.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftbbox.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftbdf.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftbitmap.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftcid.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftdebug.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftfstype.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftgasp.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftglyph.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftgxval.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftinit.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftlcdfil.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftmm.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftotval.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftpfr.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftstroke.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftsynth.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftsystem.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\fttype1.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\base\ftwinfnt.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\bdf\bdf.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\cache\ftcache.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\cff\cff.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\cid\type1cid.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\gzip\ftgzip.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\lzw\ftlzw.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\pcf\pcf.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\pfr\pfr.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\psaux\psaux.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\pshinter\pshinter.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\psnames\psmodule.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\raster\raster.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\sfnt\sfnt.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\smooth\smooth.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\truetype\truetype.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\type1\type1.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\type42\type42.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+    <ClCompile Include="oshgui\Dependencies\Source\FreeType\src\winfonts\winfnt.c">
+      <CompileAs>CompileAsC</CompileAs>
+    </ClCompile>
+  </ItemGroup>
+
+  <!-- Header files -->
+  <ItemGroup>
+    <ClInclude Include="semtex\inc.h" />
+    <ClInclude Include="semtex\hooks\hooks.h" />
+    <ClInclude Include="semtex\renderer\renderer.h" />
+    <ClInclude Include="semtex\input\input.h" />
+    <ClInclude Include="semtex\menu\menu.h" />
+    <ClInclude Include="detours\detours.h" />
+  </ItemGroup>
+
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+</Project>

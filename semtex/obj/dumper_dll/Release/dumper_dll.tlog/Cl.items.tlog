@@ -1,0 +1,10 @@
+C:\Users\caden\Downloads\semtexprivate\semtex\dumper\dumper_dll.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\dumper_dll.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\dumper\offset_dump.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\offset_dump.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\semtex\util\pattern.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\pattern.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\detours\detours.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\detours.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\detours\creatwth.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\creatwth.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\detours\disasm.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\disasm.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\detours\disolx86.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\disolx86.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\detours\disolx64.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\disolx64.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\detours\image.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\image.obj
+C:\Users\caden\Downloads\semtexprivate\semtex\detours\modules.cpp;C:\Users\caden\Downloads\semtexprivate\semtex\obj\dumper_dll\Release\modules.obj
