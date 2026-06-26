@@ -1,0 +1,259 @@
+#include "menu_controls.h"
+#include "../../oshgui/Controls/ColorPicker.hpp"
+
+static OSHGui::Drawing::FontPtr menu_font()
+{
+    return g_renderer.get_instance()->GetDefaultFont();
+}
+
+static OSHGui::Drawing::Color menu_accent()
+{
+    return g_renderer.get_instance()->GetPrimaryColor();
+}
+
+static void init_slider(menu_ctrl::slider* bar, OSHGui::Control* parent, float min, float max, int precision,
+                        const OSHGui::Misc::AnsiString& text, const std::string& suffix)
+{
+    bar->SetFont(menu_font());
+    bar->SetBackColor(menu_accent());
+    bar->SetMinimum(min);
+    bar->SetMaximum(max);
+    bar->SetPrecision(precision);
+    bar->SetText(text);
+    bar->SetAppendText(suffix);
+    parent->AddControl(bar);
+}
+
+menu_ctrl::groupbox::groupbox(const AnsiString& text, int x, int y, int w, int h)
+{
+    SetFont(menu_font());
+    SetBounds(x, y, w, h);
+    SetText(text);
+    g_menu.set_y_pos(10);
+}
+
+menu_ctrl::checkbox::checkbox(const AnsiString& text, int x, int y, Control* parent, bool* value)
+{
+    SetBackColor(menu_accent());
+    SetFont(menu_font());
+    SetLocation(x, y);
+    SetText(text);
+    SetChecked(*value);
+    parent->AddControl(this);
+
+    GetCheckedChangedEvent() += OSHGui::CheckedChangedEventHandler([this, value](Control*)
+    {
+        *value = GetChecked();
+    });
+}
+
+menu_ctrl::checkbox::checkbox(const AnsiString& text, Control* parent, bool* value)
+    : checkbox(text, g_menu.get_x_pos(), g_menu.get_y_pos(), parent, value)
+{
+    g_menu.push_y_pos(18);
+}
+
+menu_ctrl::slider::slider(const AnsiString& text, Control* parent, float min, float max, int* value, int default_value, const std::string& suffix)
+{
+    SetLocation(parent->GetWidth() / 2 - GetWidth() / 2, g_menu.get_y_pos() + 4);
+    init_slider(this, parent, min, max, 0, text, suffix);
+    SetValue(static_cast<float>(*value = default_value));
+
+    GetValueChangedEvent() += OSHGui::ValueChangedEventHandler([this, value](Control*)
+    {
+        *value = static_cast<int>(GetValue());
+    });
+
+    g_menu.push_y_pos(GetSize().Height + 10);
+}
+
+menu_ctrl::slider::slider(const AnsiString& text, Control* parent, float min, float max, float* value, int precision, float default_value, const std::string& suffix)
+{
+    SetLocation(parent->GetWidth() / 2 - GetWidth() / 2, g_menu.get_y_pos() + 4);
+    init_slider(this, parent, min, max, precision, text, suffix);
+    SetValue(*value = default_value);
+
+    GetValueChangedEvent() += OSHGui::ValueChangedEventHandler([this, value](Control*)
+    {
+        *value = GetValue();
+    });
+
+    g_menu.push_y_pos(GetSize().Height + 10);
+}
+
+menu_ctrl::combo::combo(const AnsiString& text, const std::vector<AnsiString>& items, Control* parent, int max_items, int* value, int parent_width)
+{
+    SetLocation(parent_width / 2 - GetWidth() / 2 - 3, g_menu.get_y_pos() + 12);
+    SetFont(menu_font());
+    SetMaxShowItems(max_items);
+
+    auto* label = new OSHGui::Label();
+    label->SetFont(menu_font());
+    label->SetForeColor(OSHColor::FromRGB(201, 201, 201));
+    label->SetLocation(GetLeft(), GetTop() - 12);
+    label->SetText(text);
+    parent->AddControl(label);
+
+    for (const auto& item : items)
+        AddItem(item);
+
+    SetSelectedIndex(*value, false);
+    parent->AddControl(this);
+
+    GetSelectedIndexChangedEvent() += OSHGui::SelectedIndexChangedEventHandler([this, value](Control*)
+    {
+        *value = GetSelectedIndex();
+    });
+
+    g_menu.push_y_pos(40);
+}
+
+menu_ctrl::listbox::listbox(const AnsiString& text, Control* parent, const std::vector<AnsiString>& items, int* selected_index, int height_items)
+{
+    SetLocation(19, g_menu.get_y_pos());
+    SetSize(220, height_items * 18 + 8);
+    SetFont(menu_font());
+    SetAutoScrollEnabled(true);
+    ExpandSizeToShowItems(height_items);
+
+    auto* label = new OSHGui::Label();
+    label->SetFont(menu_font());
+    label->SetForeColor(OSHColor::FromRGB(201, 201, 201));
+    label->SetLocation(GetLeft(), GetTop() - 14);
+    label->SetText(text);
+    parent->AddControl(label);
+
+    for (const auto& item : items)
+        AddItem(item);
+
+    if (*selected_index >= 0 && *selected_index < static_cast<int>(items.size()))
+        SetSelectedIndex(*selected_index);
+
+    parent->AddControl(this);
+
+    GetSelectedIndexChangedEvent() += OSHGui::SelectedIndexChangedEventHandler([this, selected_index](Control*)
+    {
+        *selected_index = GetSelectedIndex();
+    });
+
+    g_menu.push_y_pos(GetSize().Height + 22);
+}
+
+menu_ctrl::radio::radio(const AnsiString& text, Control* parent, int* group_value, int option_index)
+{
+    SetBackColor(menu_accent());
+    SetFont(menu_font());
+    SetLocation(g_menu.get_x_pos(), g_menu.get_y_pos());
+    SetText(text);
+    SetChecked(*group_value == option_index);
+    parent->AddControl(this);
+
+    GetCheckedChangedEvent() += OSHGui::CheckedChangedEventHandler([group_value, option_index](Control* sender)
+    {
+        if (static_cast<radio*>(sender)->GetChecked())
+            *group_value = option_index;
+    });
+
+    g_menu.push_y_pos(18);
+}
+
+menu_ctrl::hotkey::hotkey(const AnsiString& text, Control* parent, int* key_value, int parent_width)
+{
+    SetLocation(parent_width / 2 - GetWidth() / 2 - 3, g_menu.get_y_pos() + 12);
+    SetFont(menu_font());
+
+    auto* label = new OSHGui::Label();
+    label->SetFont(menu_font());
+    label->SetForeColor(OSHColor::FromRGB(201, 201, 201));
+    label->SetLocation(GetLeft(), GetTop() - 12);
+    label->SetText(text);
+    parent->AddControl(label);
+
+    SetHotkey(static_cast<OSHGui::Key>(*key_value));
+    parent->AddControl(this);
+
+    GetHotkeyChangedEvent() += OSHGui::HotkeyChangedEventHandler([this, key_value](Control*)
+    {
+        *key_value = static_cast<int>(GetHotkey());
+    });
+
+    g_menu.push_y_pos(36);
+}
+
+menu_ctrl::text_field::text_field(const AnsiString& label_text, Control* parent, int parent_width)
+{
+    SetLocation(parent_width / 2 - GetWidth() / 2 - 3, g_menu.get_y_pos() + 12);
+    SetFont(menu_font());
+    SetSize(200, 22);
+
+    auto* label = new OSHGui::Label();
+    label->SetFont(menu_font());
+    label->SetForeColor(OSHColor::FromRGB(201, 201, 201));
+    label->SetLocation(GetLeft(), GetTop() - 12);
+    label->SetText(label_text);
+    parent->AddControl(label);
+
+    parent->AddControl(this);
+    g_menu.push_y_pos(36);
+}
+
+menu_ctrl::color_field::color_field(const AnsiString& label, Control* parent, int* r, int* g, int* b)
+{
+    auto* lbl = new OSHGui::Label();
+    lbl->SetFont(menu_font());
+    lbl->SetForeColor(OSHColor::FromRGB(201, 201, 201));
+    lbl->SetLocation(g_menu.get_x_pos(), g_menu.get_y_pos());
+    lbl->SetText(label);
+    parent->AddControl(lbl);
+    g_menu.push_y_pos(14);
+
+    auto* picker = new OSHGui::ColorPicker();
+    picker->SetFont(menu_font());
+    picker->SetLocation(g_menu.get_x_pos(), g_menu.get_y_pos());
+    picker->SetSize(140, 100);
+    picker->SetColor(OSHColor::FromARGB(255, *r, *g, *b));
+    parent->AddControl(picker);
+
+    picker->GetColorChangedEvent() += OSHGui::ColorChangedEventHandler([r, g, b](Control*, const OSHColor& color)
+    {
+        *r = color.GetRed();
+        *g = color.GetGreen();
+        *b = color.GetBlue();
+    });
+
+    g_menu.push_y_pos(106);
+}
+
+menu_ctrl::color_picker::color_picker(Control* parent, Control* align_to, float* rgba)
+{
+    const int y = align_to ? align_to->GetTop() + 2 : g_menu.get_y_pos();
+    SetLocation(parent->GetWidth() - 38, y);
+    SetColor(OSHGui::Drawing::Color::FromARGB(rgba));
+    parent->AddControl(this);
+
+    GetColorChangedEvent() += OSHGui::ColorChangedEventHandler([rgba](Control*, const OSHColor& color)
+    {
+        rgba[0] = color.GetAlpha();
+        rgba[1] = color.GetRed();
+        rgba[2] = color.GetGreen();
+        rgba[3] = color.GetBlue();
+    });
+}
+
+menu_ctrl::button::button(const AnsiString& text, Control* parent, std::function<void()> on_click)
+{
+    SetForeColor(OSHColor::FromARGB(255, 201, 201, 201));
+    SetFont(menu_font());
+    SetLocation(g_menu.get_x_pos(), g_menu.get_y_pos());
+    SetSize(160, 22);
+    SetText(text);
+    parent->AddControl(this);
+
+    GetClickEvent() += OSHGui::ClickEventHandler([on_click](Control*)
+    {
+        if (on_click)
+            on_click();
+    });
+
+    g_menu.push_y_pos(28);
+}
